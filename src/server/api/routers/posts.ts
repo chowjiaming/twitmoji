@@ -56,7 +56,7 @@ export const postsRouter = createTRPCRouter({
       if (!author || !author.username) {
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
-          message: 'Could not find author for post',
+          message: 'Could not find author for post 😲',
         });
       }
 
@@ -72,7 +72,11 @@ export const postsRouter = createTRPCRouter({
   create: privateProcedure
     .input(
       z.object({
-        content: z.string().emoji().min(1).max(280),
+        content: z
+          .string()
+          .emoji('You may only post emojis 🙃')
+          .min(1)
+          .max(280),
       })
     )
     .mutation(async ({ctx, input}) => {
@@ -80,7 +84,11 @@ export const postsRouter = createTRPCRouter({
 
       const {success} = await ratelimit.limit(authorId);
 
-      if (!success) throw new TRPCError({code: 'TOO_MANY_REQUESTS'});
+      if (!success)
+        throw new TRPCError({
+          code: 'TOO_MANY_REQUESTS',
+          message: 'You are doing that too much 😲',
+        });
 
       const post = await ctx.prisma.post.create({
         data: {
