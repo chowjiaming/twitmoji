@@ -14,6 +14,7 @@ import Image from 'next/image';
 import {LoadingPage, LoadingSpinner} from '@/components/loading';
 import {toast} from 'react-hot-toast';
 import Link from 'next/link';
+import {PageLayout} from '@/components/layout';
 
 dayjs.extend(relativeTime);
 
@@ -89,13 +90,15 @@ const PostView = (props: PostWithUser) => {
   const {post, author} = props;
   return (
     <div key={post.id} className="flex gap-3 border-b border-slate-400 p-4">
-      <Image
-        src={author.profileImageUrl}
-        alt={`@${author.username} profile picture`}
-        className="h-14 w-14 rounded-full"
-        width={56}
-        height={56}
-      />
+      <Link href={`/@${author.username}`}>
+        <Image
+          src={author.profileImageUrl}
+          alt={`@${author.username} profile picture`}
+          className="h-14 w-14 rounded-full"
+          width={56}
+          height={56}
+        />
+      </Link>
       <div className="flex flex-col">
         <div className="flex gap-1 text-slate-300">
           <Link href={`/@${author.username}`}>
@@ -143,19 +146,17 @@ const Home: NextPage = () => {
   }
 
   return (
-    <main className="flex h-screen justify-center">
-      <div className="h-full w-full border-x border-slate-400 md:max-w-2xl">
-        <div className="flex border-b border-slate-400 p-4">
-          {!userSignedIn && (
-            <div className="flex justify-center">
-              <SignInButton />
-            </div>
-          )}
-          {userSignedIn && <CreatePostWizard />}
-        </div>
-        <Feed />
+    <PageLayout>
+      <div className="flex border-b border-slate-400 p-4">
+        {!userSignedIn && (
+          <div className="flex justify-center">
+            <SignInButton />
+          </div>
+        )}
+        {userSignedIn && <CreatePostWizard />}
       </div>
-    </main>
+      <Feed />
+    </PageLayout>
   );
 };
 
