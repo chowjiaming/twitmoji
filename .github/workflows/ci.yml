@@ -10,17 +10,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Install Dependencies
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@my-scope'
+          always-auth: true
+      - name: Install dependencies
         run: pnpm install
-
       - name: Typecheck
         run: pnpm run typecheck
-
       - name: Lint
         run: pnpm run lint
-
       - name: Print Environment Variable
         run: echo $MY_ENV_VAR
